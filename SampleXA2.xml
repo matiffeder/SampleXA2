@@ -1,0 +1,133 @@
+<Ui xmlns="http://www.runewaker.com/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="../../worldxml/ui.xsd"> 
+	<Script file="SampleXA2.lua"/>
+	<!--the GUI can also use if it didn't find XAddonMngr-->
+	<!--you can use any style of GUI,
+		just remember to use XAddon_HideBack1(this) or XAddon_HideBack2(this)-->
+	<!--frameStrata must MEDIUM or higher, frameLevel must 1 or higher,
+		otherwise, your will not see your GUI in XAddonMngr-->
+	<Frame name="SampleXA2Temp" virtual="true" hidden="true" enableMouse="true" frameStrata="MEDIUM" frameLevel="1">
+		<!--please use the smaller size or SetScale when XAddonMngr detected-->
+		<Size><AbsDimension x="612" y="503"/></Size>
+		<Anchors><Anchor point="CENTER"/></Anchors>
+		<!--background for your GUI and XAddonMngr, you can also use other layer-->
+		<Backdrop edgeFile="Interface\Tooltips\Tooltip-Border" bgFile="Interface\Tooltips\Tooltip-Background">
+			<BackgroundInsets><AbsInset top="4" left="4" bottom="4" right="4"/></BackgroundInsets>
+			<EdgeSize><AbsValue val="16"/></EdgeSize>
+			<TileSize><AbsValue val="16"/></TileSize>
+		</Backdrop>
+		<Frames>
+			<!--close button use the same anchor and size with XAddonMngr's save button-->
+			<!--you couldn't use the button, or change to save button-->
+			<Button name="$parent_Close" inherits="UIPanelButtonTemplate" text="CLOSE">
+				<Anchors>
+					<Anchor point="BOTTOMRIGHT">
+						<Offset>
+							<AbsDimension x="-7" y="-6"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Size><AbsDimension x="110" y="30"/></Size>
+				<Scripts>
+					<OnClick>SampleXA2_Close();</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnShow>
+				SampleXA2_OnShow(this);
+				<!--<<<add this if you have more pages, you can also other way>>>-->
+				SampleXA2_Pre(this);
+			</OnShow>
+			<!--only move GUI if no XAddonMngr-->
+			<!--add "or (XBARVERSION and XBARVERSION<1.51) would better", but following is simple-->
+			<OnMouseDown>
+				if not XBARVERSION then
+					this:StartMoving();
+				end
+			</OnMouseDown>
+			<!--<<<add this if you have more pages, you can also other way>>>-->
+			<OnHide>SampleXA2_OnHide();</OnHide>
+		</Scripts>
+	</Frame>
+	<Frame name="SampleXA2GUI" inherits="SampleXA2Temp" parent="UIParent">
+		<Frames>
+			<!--this is just a sample element-->
+			<Button name="$parent_Button" inherits="UIPanelButtonTemplate" text="MainPage">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="15" y="40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Size><AbsDimension x="110" y="30"/></Size>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnLoad>this:RegisterEvent("VARIABLES_LOADED");</OnLoad>
+			<OnEvent>SampleXA2_OnEvent(event);</OnEvent>
+			<OnMouseUp>
+				if not XBARVERSION then
+					this:StopMovingOrSizing();
+					<!--<<<add this if you have more pages, you can also other way>>>-->
+					SampleXA2_Pos(this, SampleXA2GUISub);
+				end
+			</OnMouseUp>
+		</Scripts>
+	</Frame>
+	<!--<<<add this if you have more pages, you can also other way>>>-->
+	<Frame name="SampleXA2GUISub" inherits="SampleXA2Temp" parent="UIParent">
+		<Frames>
+			<Button name="$parent_Button" inherits="UIPanelButtonTemplate" text="SubPage">
+				<Anchors>
+					<Anchor point="TOPLEFT">
+						<Offset>
+							<AbsDimension x="15" y="40"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Size><AbsDimension x="110" y="30"/></Size>
+			</Button>
+		</Frames>
+		<Scripts>
+			<OnMouseUp>
+				if not XBARVERSION then
+					this:StopMovingOrSizing();
+					SampleXA2_Pos(this, SampleXA2GUI);
+				end
+			</OnMouseUp>
+		</Scripts>
+	</Frame>
+	<!--<<<add this if you have more pages, you can also other way>>>-->
+	<!--tab button for your original GUI if you have more pages and not found XAddonMngr-->
+	<Frame name="SampleXA2Tab" parent="UIParent" hidden="true">
+		<Frames>
+			<Button name="$parent_1" inherits="UIPanelButtonTemplate" text="Tab1">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" relativeTo="SampleXA2GUI">
+						<Offset>
+							<AbsDimension x="0" y="35"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Size><AbsDimension x="110" y="30"/></Size>
+				<Scripts>
+					<OnClick>SampleXA2_Page(SampleXA2GUI);</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_2" inherits="UIPanelButtonTemplate" text="Tab2">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT" relativeTo="SampleXA2GUI">
+						<Offset>
+							<AbsDimension x="120" y="35"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Size><AbsDimension x="110" y="30"/></Size>
+				<Scripts>
+					<OnClick>SampleXA2_Page(SampleXA2GUISub);</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+</Ui>
